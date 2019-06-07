@@ -2,9 +2,7 @@ import requests
 import string
 import time
 
-
-
-global botName = "Thanos"
+botName = "Thanos"
 
 def botinfo():
     global botid
@@ -14,12 +12,10 @@ def botinfo():
     botid = lines[0]
     uid = lines[1]
 
-
 def echo(toRepeate):
     print("CMD Call: Echo ")
     ret(toRepeate[toRepeate.find("echo"):])
     return;
-
 
 #Controls the out flow message
 def ret(msg):
@@ -27,12 +23,7 @@ def ret(msg):
     requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
     return;
 
-
-
-
-
 #main
-
 
 botinfo() #fetch sensitive bot info
 request_params = {'token': uid}
@@ -51,7 +42,7 @@ while True:
         for message in response_messages:
             print(message['text'])
 
-            if('echo' in message['text']):
+            if(message['text'] and 'echo' in message['text']):
                 echo(message['text'][5:])
 
             # resume normal actions
@@ -66,13 +57,11 @@ while True:
                 print('ended')
                 #exit()
 
-
-            if (('?' in message['text'] or 'should' in message['text']) and message['id'] not in fc and message['name'] != botName ):
+            if (message['text'] and ('?' in message['text'] or 'should' in message['text']) and message['id'] not in fc and message['name'] != botName ):
                 to_r = 'Nah man'
                 fc.append(message['id'])
                 post_params = {'bot_id': botid, 'text': to_r}
                 requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
                 request_params['since_id'] = message['id']
 
-
-time.sleep(5)
+    time.sleep(5)
