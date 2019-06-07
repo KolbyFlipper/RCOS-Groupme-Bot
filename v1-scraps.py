@@ -2,7 +2,8 @@ import requests
 import string
 import time
 #hi
-global botName = "Thanos"
+global bot
+Name = "Thanos"
 
 def botinfo():
     global botID
