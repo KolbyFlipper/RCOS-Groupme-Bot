@@ -2,35 +2,32 @@ import requests
 import string
 import time
 
+global botName = "Thanos"
+    
 def botinfo():
-    global botid
-    global uid
+    global botID
+    global uID
+    
     f = open("pass.txt", "r")
     lines = [line.rstrip('\n') for line in f]
-    botid = lines[0]
-    uid = lines[1]
+    botID = lines[0]
+    uID = lines[1]
 
-
-def echo(toRepeate):
+def echo(toRepeat):
     print("CMD Call: Echo ")
-    ret(toRepeate)
+    ret(toRepeat)
     return;
-
 
 #Controls the out flow message
 def ret(msg):
-    post_params = {'bot_id': botid, 'text': msg}
+    post_params = {'bot_id': botID, 'text': msg}
     requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
     return;
 
-
 #main
-
-
 botinfo() #fetch sensitive bot info
-request_params = {'token': uid}
+request_params = {'token': uID}
 ender = 0
-target = 'Aidan'
 fc = []
 
 while True:
@@ -45,29 +42,26 @@ while True:
         for message in response_messages:
             print(message['text'])
 
-            if('echo' in message['text']):
+            if('echo' in message['text'] and message['name'] != botName):
                 echo(message['text'][5:])
 
             # resume normal actions
-            if (message['text'] == 'resume' and message['name'] == 'Aidan' and message['id'] not in fc):
+            if (message['text'] == 'resume' and message['name'] != botName and message['id'] not in fc):
                 fc.append(message['id'])
                 ender = 0
                 print('resume')
 
             # emergency stop
-            if (message['text'] == 'pause' and message['name'] == 'Aidan' and message['id'] not in fc):
+            if (message['text'] == 'pause' and message['name'] != botName and message['id'] not in fc):
                 fc.append(message['id'])
                 print('ended')
                 #exit()
 
-
             if (('?' in message['text'] or 'should' in message['text']) and message['id'] not in fc):
                 to_r = 'Nah man'
                 fc.append(message['id'])
-                post_params = {'bot_id': botid, 'text': to_r}
+                post_params = {'bot_id': botID, 'text': to_r}
                 requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
                 request_params['since_id'] = message['id']
 
-
     time.sleep(5)
-
