@@ -3,7 +3,7 @@ import string
 import time
 #hi
 global bot
-Name = "Thanos"
+botName = "Thanos"
 
 def botinfo():
     global botID
