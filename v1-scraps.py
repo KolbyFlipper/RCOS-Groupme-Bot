@@ -49,16 +49,15 @@ while True:
         #      requests.post('https://api.groupme.com/v3/bots/post', params = post_params)
         #    request_params['since_id'] = message['id']
         #  time.sleep(1)
-        '''  
+        '''
             if ("something" in message['text']):
                 # Construct a response to send to the group
                 to_send = 'THIS IS THE END\N{FACE SCREAMING IN FEAR}'
-        
+
                 # Send the response to the group
                 for pls in range(0,1):
-                    post_params = { 'bot_id' : 'BOTIDHERE', 'text': to_send } 
+                    post_params = { 'bot_id' : 'BOTIDHERE', 'text': to_send }
                     requests.post('https://api.groupme.com/v3/bots/post', params = post_params)
                     request_params['since_id'] = message['id']
                 break
         '''
-
