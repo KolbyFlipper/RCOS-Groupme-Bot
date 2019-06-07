@@ -25,7 +25,7 @@ def ret(msg):
 
 #main
 
-botinfo() #fetch sensitive bot info
+botinfo() #fetch sensitive bot info. file should have bot ID, then uID, on 2 separate lines
 request_params = {'token': uid}
 ender = 0
 fc = []
@@ -46,22 +46,15 @@ while True:
                 echo(message['text'][5:])
 
             # resume normal actions
-            if (message['text'] == 'resume' and message['name'] != botName and message['id'] not in fc):
+            if (message['text'] and message['text'] == 'resume' and message['name'] != botName and message['id'] not in fc):
                 fc.append(message['id'])
                 ender = 0
                 print('resume')
 
             # emergency stop
-            if (message['text'] == 'pause' and message['name'] != botName and message['id'] not in fc):
+            if (message['text'] and message['text'] == 'pause' and message['name'] != botName and message['id'] not in fc):
                 fc.append(message['id'])
                 print('ended')
                 #exit()
-
-            if (message['text'] and ('?' in message['text'] or 'should' in message['text']) and message['id'] not in fc and message['name'] != botName ):
-                to_r = 'Nah man'
-                fc.append(message['id'])
-                post_params = {'bot_id': botid, 'text': to_r}
-                requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
-                request_params['since_id'] = message['id']
 
     time.sleep(5)
