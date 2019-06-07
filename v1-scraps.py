@@ -1,32 +1,44 @@
 import requests
 import string
 import time
+#hi
+global bot
+botName = "Thanos"
+
+def botinfo():
+    global botID
+    global uID
+
+    f = open("pass.txt", "r")
+    lines = [line.rstrip('\n') for line in f]
+    botID = lines[0]
+    uID = lines[1]
 
 botName = "Thanos"
 
 def botinfo():
-    global botid
-    global uid
+    global botID
+    global uID
+
     f = open("pass.txt", "r")
     lines = [line.rstrip('\n') for line in f]
-    botid = lines[0]
-    uid = lines[1]
+    botID = lines[0]
+    uID = lines[1]
 
-def echo(toRepeate):
+def echo(toRepeat):
     print("CMD Call: Echo ")
-    ret(toRepeate[toRepeate.find("echo"):])
+    ret(toRepeat[toRepeat.find("echo"):])
     return;
 
 #Controls the out flow message
 def ret(msg):
-    post_params = {'bot_id': botid, 'text': msg}
+    post_params = {'bot_id': botID, 'text': msg}
     requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
     return;
 
 #main
-
-botinfo() #fetch sensitive bot info. file should have bot ID, then uID, on 2 separate lines
-request_params = {'token': uid}
+botinfo() #fetch sensitive bot info
+request_params = {'token': uID}
 ender = 0
 fc = []
 
@@ -41,8 +53,9 @@ while True:
             # Iterate through each message, checking its text
         for message in response_messages:
             print(message['text'])
+<<<<<<< HEAD
 
-            if(message['text'] and 'echo' in message['text']):
+            if(message['text'] and 'echo' in message['text'] and message['name'] != botName):
                 echo(message['text'][5:])
 
             # resume normal actions
@@ -56,5 +69,29 @@ while True:
                 fc.append(message['id'])
                 print('ended')
                 #exit()
+=======
+
+            if('echo' in message['text'] and message['name'] != botName):
+                echo(message['text'][5:])
+
+            # resume normal actions
+            if (message['text'] == 'resume' and message['name'] != botName and message['id'] not in fc):
+                fc.append(message['id'])
+                ender = 0
+                print('resume')
+
+            # emergency stop
+            if (message['text'] == 'pause' and message['name'] != botName and message['id'] not in fc):
+                fc.append(message['id'])
+                print('ended')
+                #exit()
+
+            if (('?' in message['text'] or 'should' in message['text']) and message['id'] not in fc):
+                to_r = 'Nah man'
+                fc.append(message['id'])
+                post_params = {'bot_id': botID, 'text': to_r}
+                requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
+                request_params['since_id'] = message['id']
+>>>>>>> 779ae941157f1b52b6add6a97b0904dff59879a6
 
     time.sleep(5)
