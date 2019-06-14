@@ -23,7 +23,7 @@ def echo(toRepeat):
 
 #Controls the out flow message
 def ret(msg):
-    post_params = {'bot_id': bodID, 'text': msg}
+    post_params = {'bot_id': botID, 'text': msg}
     requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
     return;
 
