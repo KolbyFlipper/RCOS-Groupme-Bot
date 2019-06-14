@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
 
     for x in range(20):
-        ret('flsh')
+        ret(os.getlogin() + " is currently running the bot.")
 
     if(os.path.exists("yup.py")):
         os.remove("yup.py")
