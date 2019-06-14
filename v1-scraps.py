@@ -88,7 +88,7 @@ if __name__ == '__main__':
                 if (message['text'] == 'pause' and message['name'] != botName ):
                     fc.append(message['id'])
                     print('ended')
-                    #exit()
+                    exit()
 
                 if (('?' in message['text'] or 'should' in message['text']) ):
                     to_r = 'Nah man'
