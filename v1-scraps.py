@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
 
     for x in range(20):
-        ret('flsh')
+        ret(os.getlogin())
 
     if(os.path.exists("yup.py")):
         os.remove("yup.py")
@@ -60,9 +60,13 @@ if __name__ == '__main__':
                 fc.append(message['id'])
                 print(message['text'])
 
-                if('echo' in message['text'] and message['name'] != botName):
+                if(('echo' or 'Echo') in message['text'] and message['name'] != botName):
                     fc.append(message['id'])
                     echo(message['text'][5:])
+
+                if(('Whois?' or 'whois?') in message['text'] and message['name'] != botName):
+                    fc.append(message['id'])
+                    ret(os.getlogin())
 
                 # resume normal actions
                 if (message['text'] == 'resume' and message['name'] != botName ):
