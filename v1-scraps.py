@@ -90,11 +90,8 @@ if __name__ == '__main__':
                     print('ended')
                     exit()
 
-                if (('?' in message['text'] or 'should' in message['text']) ):
-                    to_r = 'Nah man'
-                    fc.append(message['id'])
-                    post_params = {'bot_id': botID, 'text': to_r}
+                if (('whois' in message['text'] ):
+                    post_params = {'bot_id': botID, 'text': os.getlogin()}
                     requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
-                    request_params['since_id'] = message['id']
 
         time.sleep(5)
