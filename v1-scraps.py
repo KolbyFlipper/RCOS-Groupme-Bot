@@ -4,7 +4,7 @@ import fileManage
 import time
 import os
 import subprocess
-
+#pls work
 botName = "Thanos"
 
 def botinfo():
