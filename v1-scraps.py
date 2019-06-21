@@ -4,6 +4,7 @@ import fileManage
 import time
 import os
 import subprocess
+import time
 
 botName = "Thanos"
 
@@ -42,6 +43,8 @@ if __name__ == '__main__':
     if(os.path.exists("yup.py")):
         os.remove("yup.py")
 
+    if(not os.path.exists("time.txt")):
+        fileManage.writeFile('time.txt', str(int(time.time())))
 
 
 
@@ -52,19 +55,29 @@ if __name__ == '__main__':
         if (response.status_code == 200):
             response_messages = response.json()['response']['messages']
 
+            #GET THE VALID MESSAGES BASED ON TIME AND IF THEY ADDRESS THE BOT
+            last_time = int(fileManage.readFile("time.txt"))
+            print(last_time)
+            fileManage.writeFile('time.txt', str(int(time.time())))
+
+
                 # Iterate through each message, checking its text
             for message in response_messages:
+                print(message['created_at'])
+                print(int(time.time()))
+                print(message['created_at'] > int(time.time()))
+
                 if(message['id'] in fc):
                     continue
 
                 fc.append(message['id'])
                 print(message['text'])
 
-                if(('echo' or 'Echo') in message['text'] and message['name'] != botName):
+                if('echo' in message['text'] and message['name'] != botName):
                     fc.append(message['id'])
                     echo(message['text'][5:])
 
-                if(('Whois?' or 'whois?') in message['text'] and message['name'] != botName):
+                if('whois?' in message['text'] and message['name'] != botName):
                     fc.append(message['id'])
                     ret(os.getlogin())
 
@@ -89,12 +102,12 @@ if __name__ == '__main__':
 
 
                 # emergency stop
-                if (message['text'] == 'pause' and message['name'] != botName ):
+                if (message['text'] == 'Exit' and message['name'] != botName ):
                     fc.append(message['id'])
                     print('ended')
                     exit()
 
-                if (('whois' in message['text'] ):
+                if ('whois' in message['text']  and message['name'] != botName):
                     to_r = os.getlogin()
                     fc.append(message['id'])
                     post_params = {'bot_id': botID, 'text': to_r}

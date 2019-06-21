@@ -14,9 +14,9 @@ def writeFile(fileName, text):
 # end of writeFile
 
 # will read a files output to given stream
-def readFile(fileName, stream):
+def readFile(fileName):
     with open(fileName, "r") as fp:
-        print(fp.read())
+        return(fp.read())
 
 
 # end of read file
