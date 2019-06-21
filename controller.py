@@ -72,17 +72,21 @@ if __name__ == '__main__':
 
             #get the last time messages were read and write the current time as the last time messages were read
             last_time = int(fileManage.readFile("time.txt"))
-            print(last_time)
-            fileManage.writeFile('time.txt', str(int(time.time())))
-
             valid_messages = []
+            most_recent_message_time = 0
 
             # Iterate through each message, checking that it is a message that is not read before and not sent by the bot
             for message in response_messages:
                 if( int(message['created_at']) > last_time and message['name'] != botName):
                     valid_messages.append(message)
 
-            print(valid_messages)
+                    if(most_recent_message_time < int(message['created_at'])):
+                        most_recent_message_time = int(message['created_at'])
+
+
+            if(most_recent_message_time != 0):
+                fileManage.writeFile('time.txt', str(most_recent_message_time))
+
             parse_messages(valid_messages)
 
-        time.sleep(5)
+        time.sleep(1)
