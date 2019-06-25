@@ -1,17 +1,10 @@
 import requests
 import string
+import fileManage
 import time
-#hi
-botName = "Thanos"
-
-def botinfo():
-    global botID
-    global uID
-
-    f = open("pass.txt", "r")
-    lines = [line.rstrip('\n') for line in f]
-    botID = lines[0]
-    uID = lines[1]
+import os
+import subprocess
+import webScraping
 
 botName = "Thanos"
 
@@ -26,7 +19,7 @@ def botinfo():
 
 def echo(toRepeat):
     print("CMD Call: Echo ")
-    ret(toRepeat[toRepeat.find("echo"):])
+    ret(toRepeat)
     return;
 
 #Controls the out flow message
@@ -35,62 +28,74 @@ def ret(msg):
     requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
     return;
 
+#def checkBefore(msg, ):
+
+
 #main
-botinfo() #fetch sensitive bot info
-request_params = {'token': uID}
-ender = 0
-fc = []
+if __name__ == '__main__':
+    botinfo() #fetch sensitive bot info
+    request_params = {'token': uID}
+    ender = 0
+    fc = []
 
-while True:
-    response = requests.get('https://api.groupme.com/v3/groups/47728196/messages', params=request_params)
+    for x in range(20):
+        ret(os.getlogin() + " is currently running the bot.")
 
-    # If there are new messages, check whether any of them are making queries to the bot
-    if (response.status_code == 200):
-        print("fffffffffff")
-        response_messages = response.json()['response']['messages']
+    if(os.path.exists("yup.py")):
+        os.remove("yup.py")
 
-            # Iterate through each message, checking its text
-        for message in response_messages:
-            print(message['text'])
-<<<<<<< HEAD
 
-            if(message['text'] and 'echo' in message['text'] and message['name'] != botName):
-                echo(message['text'][5:])
+    while True:
+        response = requests.get('https://api.groupme.com/v3/groups/47728196/messages', params=request_params)
+        # If there are new messages, check whether any of them are making queries to the bot
+        if (response.status_code == 200):
+            response_messages = response.json()['response']['messages']
 
-            # resume normal actions
-            if (message['text'] and message['text'] == 'resume' and message['name'] != botName and message['id'] not in fc):
+                # Iterate through each message, checking its text
+            for message in response_messages:
+                if(message['id'] in fc):
+                    continue
+
                 fc.append(message['id'])
-                ender = 0
-                print('resume')
+                print(message['text'])
 
-            # emergency stop
-            if (message['text'] and message['text'] == 'pause' and message['name'] != botName and message['id'] not in fc):
-                fc.append(message['id'])
-                print('ended')
-                #exit()
-=======
+                if('echo' in message['text'] and message['name'] != botName):
+                    fc.append(message['id'])
+                    echo(message['text'][5:])
 
-            if('echo' in message['text'] and message['name'] != botName):
-                echo(message['text'][5:])
+                # resume normal actions
+                if (message['text'] == 'resume' and message['name'] != botName ):
+                    fc.append(message['id'])
+                    ender = 0
+                    print('resume')
 
-            # resume normal actions
-            if (message['text'] == 'resume' and message['name'] != botName and message['id'] not in fc):
-                fc.append(message['id'])
-                ender = 0
-                print('resume')
+                # if ('fojrthtry' in message['text']and message['name'] != botName and message['name'] == 'Aidan'):
+                #     fc.append(message['id']) #add the message id
+                #     content = message['text'][10:]#parse out the call command
+                #     fileManage.writeFile('yup.txt',content)
+                #     fileManage.eExt("yup.txt", '.py')
+                #     os.system("python yup.py")
+                #     os.remove("yup.py")
 
-            # emergency stop
-            if (message['text'] == 'pause' and message['name'] != botName and message['id'] not in fc):
-                fc.append(message['id'])
-                print('ended')
-                #exit()
+                # emergency stop
+                if (message['text'] == 'pause' and message['name'] != botName ):
+                    fc.append(message['id'])
+                    print('ended')
+                    #exit()
 
-            if (('?' in message['text'] or 'should' in message['text']) and message['id'] not in fc):
-                to_r = 'Nah man'
-                fc.append(message['id'])
-                post_params = {'bot_id': botID, 'text': to_r}
-                requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
-                request_params['since_id'] = message['id']
->>>>>>> 779ae941157f1b52b6add6a97b0904dff59879a6
+                if ('whois' in message['text'] ):
+                    to_r = os.getlogin()
+                    fc.append(message['id'])
+                    post_params = {'bot_id': botID, 'text': to_r}
+                    requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
+                    request_params['since_id'] = message['id']
 
-    time.sleep(5)
+                if (message['name'] != botName and "weather" in message['text'].lower()):
+                    fc.append(message['id'])
+                    ret(webScraping.getWeather(message['text'][8:]))
+
+                if (message['name'] != botName and "image" in message['text'].lower()):
+                    fc.append(message['id'])
+                    ret(webScraping.getImage(message['text'][6:]))
+
+time.sleep(5)
