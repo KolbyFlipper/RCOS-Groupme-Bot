@@ -1,5 +1,6 @@
 import fileManage
 import botfunctions
+import webScraping
 
 import requests
 import string
@@ -23,11 +24,10 @@ def botinfo():
 
 
 #SENDS A MESSAGE TO THE GROUP
-def send(msg, botID):
+def send(msg):
     post_params = {'bot_id': botID, 'text': msg}
     requests.post('https://api.groupme.com/v3/bots/post', params=post_params)
     return;
-
 
 #CHECKS ALL THE MESSAGES FOR KEYWORDS
 def parse_messages(valid_messages):
@@ -35,31 +35,24 @@ def parse_messages(valid_messages):
         print(message['text'])
 
         if('echo' in message['text'] ):
-            botfunctions.echo(message, botID)
+            send (botfunctions.echo(message))
 
         if('whois' in message['text'] ):
-            send(os.getlogin(), botID)
+            send(os.getlogin())
 
-        # resume normal actions
-        if (message['text'] == 'resume'  ):
-            print('resume')
-
-        if ('fojrthtry' in message['text']):
-            botfunctions.runpython(message, botID)
+        # if ('fojrthtry' in message['text']):
+        #     send(botfunctions.runpython(message))
 
         # regular stop
-        if (message['text'] == 'Exit' or message['text'] == exit):
+        if (message['text'].lower() == 'exit'):
             print('ended')
             exit()
-            
-        if (message['name'] != botName and "weather" in message['text'].lower()):
-            fc.append(message['id'])
-            ret(webScraping.getWeather(message['text'][8:]))
 
-        if (message['name'] != botName and "image" in message['text'].lower()):
-            fc.append(message['id'])
-            ret(webScraping.getImage(message['text'][6:]))
+        if ("weather" in message['text'].lower()):
+            send(webScraping.getWeather(message['text'][8:]))
 
+        if ("image" in message['text'].lower()):
+            send(webScraping.getImage(message['text'][6:]))
 
 #main
 if __name__ == '__main__':
