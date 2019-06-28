@@ -3,27 +3,44 @@ import shlex
 import string
 
 class User(object):
+    
+    ranks = ["user", "trusted", "moderator", "admin","owner"]
+    cmds = {"user":[], "trusted":["add-user"], "moderator":["add-user"], "admin":["add-user","promote","runpython"],"owner":["add-user"]}
+    
     def __init__(self, name, ID):
         self.ID = ID
         self.name = name
         self.rank = "User"
         
-def addu(info, botID):
+    def promote():
+        if (self.ranks.index(self.rank) != 5):
+            self.rank = self.ranks.index(self.rank.lower())+1
+        else:
+            return "User already max level"
+    
+    def promote(nuRank):
+        if (nuRank.lower() in self.ranks):
+            self.rank = nuRank
+        else:
+            return "Invalid user level"
+        
+def addu(info, botID, uID):
     print("CMD Call: Add-User {}".format(info))
     shparam = shlex.split(info)
     add_param = dict()
-    add_param['nickname'] = shparam[0]
-    add_param['bot_id'] = botID
-    add_param['guid'] = "fff"
-    add_param['token'] = "" #private userID
+    add_param['members'] = []
+    add_param['members'].append(dict())
+    add_param['members'][0]['nickname'] = shparam[0]
+    add_param['members'][0]['bot_id'] = botID
+    add_param['members'][0]['guid'] = "fff"
     if "@" in shparam[1]:
-        add_param['email'] = shparam[1]
+        add_param['members'][0]['email'] = shparam[1]
     elif shparam[1][0] == "+":
-        add_param['phone_number'] = shparam[1]
+        add_param['members'][0]['phone_number'] = shparam[1]
     else:
-        add_param['user_id'] = shparam[1]
+        add_param['members'][0]['user_id'] = shparam[1]
     try:
-        print(requests.post("https://api.groupme.com/v3/groups/47728196/members/add", params=add_param).json())
+        print(requests.post("https://api.groupme.com/v3/groups?token=2FbBv60XqZzn6kFuxQ4gL0OfxmrwRREosahZcUry/47728196/members/add", params=add_param).json())
     except:
         print("add error placeholder")
     #else:
