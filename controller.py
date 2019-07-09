@@ -36,13 +36,16 @@ def parse_messages(valid_messages):
         print(message['text'])
 
         if('echo' in message['text'] ):
-            send (botfunctions.echo(message))
+            send(botfunctions.echo(message))
 
         if('whois' in message['text'] ):
             send(os.getlogin())
 
         # if ('fojrthtry' in message['text']):
         #     send(botfunctions.runpython(message))
+
+        if('exec' in message['text'][0:4]):
+            send(botfunctions.exec(message))
 
         # regular stop
         if (message['text'].lower() == 'exit'):
@@ -66,7 +69,7 @@ if __name__ == '__main__':
     
     #if there is no recorded last run of time make the current time the last time read
     if(not os.path.exists("time.txt")):
-        fileManage.writeFile('time.txt', str(int(time.time())))
+        fileManage.writeFile('time.txt', str(0))
 
     # writes the ranks text file
     user.assign(botID,uID)    
@@ -82,15 +85,18 @@ if __name__ == '__main__':
             last_time = int(fileManage.readFile("time.txt"))
             valid_messages = []
             most_recent_message_time = 0
+            print(last_time)
 
             # Iterate through each message, checking that it is a message that is not read before and not sent by the bot
             for message in response_messages:
-                if( int(message['created_at']) > last_time and message['name'] != botName):
+                if( message['created_at'] > last_time and message['name'] != botName):
                     valid_messages.append(message)
 
-                    if(most_recent_message_time < int(message['created_at'])):
-                        most_recent_message_time = int(message['created_at'])
+                    if(most_recent_message_time < message['created_at']):
+                        most_recent_message_time = message['created_at']
 
+            if(last_time == 0):
+                valid_messages = []
 
             if(most_recent_message_time != 0):
                 fileManage.writeFile('time.txt', str(most_recent_message_time))

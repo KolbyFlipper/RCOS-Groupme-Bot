@@ -21,3 +21,6 @@ def runpython(msg):
     fileManage.eExt("yup.txt", '.py')
     os.system("python yup.py")
     os.remove("yup.py")
+
+def exec(msg):
+    return "NOT IMPLEMENTED"
