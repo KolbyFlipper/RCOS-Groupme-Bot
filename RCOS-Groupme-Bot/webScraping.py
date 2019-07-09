@@ -7,6 +7,7 @@ import requests, json
 def letMeGoogleThatForYou(question):
 
     url = "https://lmgtfy.com/?q="
+
     wordArray = question.split()
 
     for word in wordArray:
@@ -16,6 +17,7 @@ def letMeGoogleThatForYou(question):
             #site ignores the extra + concatenated on, no need to strip it at the end.
 
     return url
+
 
 def getWeather(cityname):
     #credit to GeeksForGeeks.org for the basis of this function's code
