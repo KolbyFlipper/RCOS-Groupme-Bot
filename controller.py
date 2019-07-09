@@ -44,6 +44,9 @@ def parse_messages(valid_messages):
         # if('exec' in message['text'][0:4]):
         #     send(botfunctions.exec(message))
 
+        if('exec' in message['text'][0:4]):
+            send(botfunctions.exec(message))
+
         # regular stop
         if (message['text'].lower() == 'exit'):
             print('ended')
