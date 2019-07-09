@@ -1,7 +1,7 @@
 import fileManage
 import botfunctions
 import webScraping
-import User
+import user
 
 import requests
 import string
@@ -54,30 +54,22 @@ def parse_messages(valid_messages):
 
         if ("image" in message['text'].lower()):
             send(webScraping.getImage(message['text'][6:]))
+            
+
+    
 
 #main
 if __name__ == '__main__':
 
     botinfo() #fetch sensitive bot info
     request_params = {'token': uID}
-
-    User.addu('"Stephen Zenack" "sezenack@comcast.net"', botID, uID)
-    try:
-        fopen("ranks.txt", "r")
-        x=False
-    except:
-        fopen("ranks.txt", "x")
-        x=True
     
-    if (x):
-        f = fopen("ranks.txt","w")
-    
-    
-
-    '''
     #if there is no recorded last run of time make the current time the last time read
     if(not os.path.exists("time.txt")):
         fileManage.writeFile('time.txt', str(int(time.time())))
+
+    # writes the ranks text file
+    user.assign(botID,uID)    
 
     while True:
         response = requests.get('https://api.groupme.com/v3/groups/47728196/messages', params=request_params)
@@ -106,4 +98,4 @@ if __name__ == '__main__':
             parse_messages(valid_messages)
 
         time.sleep(1)
-        '''
+        
