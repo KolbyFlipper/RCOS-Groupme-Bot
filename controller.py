@@ -35,28 +35,29 @@ def send(msg):
 def parse_messages(valid_messages):
     for message in valid_messages:
         print(message['text'])
+        text = message['text'].lower().rstrip()
 
-        if('echo' == message['text'][0:3] ):
+        if('echo' == text[0:4]):
             send(botfunctions.echo(message))
 
-        if('whois' == message['text'] ):
+        if('whois' == text):
             send(os.getlogin())
 
         # if ('fojrthtry' in message['text']):
         #     send(botfunctions.runpython(message))
 
-        if('exec' in message['text'][0:4]):
+        if('exec' == text[0:4]):
             send(botfunctions.exec(message))
 
         # regular stop
-        if ((message['text'].lower() == 'exit' or 'exit' in message['text']) and not first_run):
+        if (text == 'exit' and not first_run):
             print('ended')
             exit()
 
-        if ("weather" in message['text'].lower()):
+        if ("weather" in text[0:7] and text != "weather"):
             send(webScraping.getWeather(message['text'][8:]))
 
-        if ("image" in message['text'].lower()):
+        if ("image" in text[0:5] and text != "image"):
             send(webScraping.getImage(message['text'][6:]))
 
 #main
