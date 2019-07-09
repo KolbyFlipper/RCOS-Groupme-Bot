@@ -16,6 +16,8 @@ botName = "Thanos"
 def botinfo():
     global botID
     global uID
+    global first_run
+    first_run = True
 
     f = open("pass.txt", "r")
     lines = [line.rstrip('\n') for line in f]
@@ -47,7 +49,7 @@ def parse_messages(valid_messages):
             send(botfunctions.exec(message))
 
         # regular stop
-        if (message['text'].lower() == 'exit'):
+        if ((message['text'].lower() == 'exit' or 'exit' in message['text']) and not first_run):
             print('ended')
             exit()
 
@@ -75,25 +77,31 @@ if __name__ == '__main__':
             response_messages = response.json()['response']['messages']
 
             #get the last time messages were read and write the current time as the last time messages were read
-            last_time = int(fileManage.readFile("time.txt"))
+            last_time = int(fileManage.readFile("time.txt")) #LAST CONFIRMEND SECOND THAT ALL MESSAGES WERE READ
             valid_messages = []
             most_recent_message_time = 0
-            print(last_time)
 
             # Iterate through each message, checking that it is a message that is not read before and not sent by the bot
             for message in response_messages:
-                if( message['created_at'] > last_time and message['name'] != botName):
+                if(message['name'] != botName and most_recent_message_time < message['created_at']):
+                    most_recent_message_time = message['created_at']
+
+
+            if(most_recent_message_time == last_time + 1):
+                most_recent_message_time += 1
+
+            for message in response_messages:
+                if(message['created_at'] > last_time and message['created_at'] < most_recent_message_time and message['name'] != botName):
                     valid_messages.append(message)
 
-                    if(most_recent_message_time < message['created_at']):
-                        most_recent_message_time = message['created_at']
 
             if(last_time == 0):
                 valid_messages = []
 
-            if(most_recent_message_time != 0):
-                fileManage.writeFile('time.txt', str(most_recent_message_time))
+            if(most_recent_message_time != 0 and most_recent_message_time != last_time):
+                fileManage.writeFile('time.txt', str(most_recent_message_time-1))
 
             parse_messages(valid_messages)
 
+        first_run = False
         time.sleep(1)
