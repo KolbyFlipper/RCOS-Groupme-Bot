@@ -36,10 +36,10 @@ def parse_messages(valid_messages):
     for message in valid_messages:
         print(message['text'])
 
-        if('echo' in message['text'] ):
+        if('echo' == message['text'][0:3] ):
             send(botfunctions.echo(message))
 
-        if('whois' in message['text'] ):
+        if('whois' == message['text'] ):
             send(os.getlogin())
 
         # if ('fojrthtry' in message['text']):
