@@ -1,7 +1,6 @@
 import fileManage
 import botfunctions
 import webScraping
-import user
 
 import requests
 import string
@@ -11,7 +10,6 @@ import subprocess
 import time
 
 botName = "Thanos"
-
 
 #GETS THE SENSITVE BOT INFO
 def botinfo():
@@ -35,44 +33,51 @@ def parse_messages(valid_messages):
     for message in valid_messages:
         print(message['text'])
 
-        if('echo' in message['text'] ):
+        if('echo' in message['text']):
             send(botfunctions.echo(message))
 
-        if('whois' in message['text'] ):
+        if('whois' in message['text'].lower() ):
             send(os.getlogin())
 
-        # if ('fojrthtry' in message['text']):
-        #     send(botfunctions.runpython(message))
+        # if('exec' in message['text'][0:4]):
+        #     send(botfunctions.exec(message))
 
-        if('exec' in message['text'][0:4]):
-            send(botfunctions.exec(message))
+        if('lmgtfy' in message['text'].lower()):
+            send(webScraping.letMeGoogleThatForYou(message['text'][7:]))
+
 
         # regular stop
         if (message['text'].lower() == 'exit'):
             print('ended')
             exit()
-
-        if ("weather" in message['text'].lower()):
+        #
+        if ("weather" in message['text'].lower() and message['text'].lower() != "weather" and message['text'].lower() != "weather "):
             send(webScraping.getWeather(message['text'][8:]))
 
         if ("image" in message['text'].lower()):
             send(webScraping.getImage(message['text'][6:]))
-            
 
-    
+        if ("weather" in message['text'].lower()):
+            
+            try: #error checking, this covers if user types weathertroy instead of weather troy
+                send(webScraping.getWeather(message['text'][8:]))
+            except:
+                send(webScraping.getWeather(message['text'][7:]))
+            else:
+                send("City Not Found - Syntax is \n \"Weather city\" or \n \"Weather ZipCode\"" +
+                          "\n Ex1: Weather Troy \n Ex2: Weather 1218")
 
 #main
 if __name__ == '__main__':
 
     botinfo() #fetch sensitive bot info
     request_params = {'token': uID}
-    
+
     #if there is no recorded last run of time make the current time the last time read
     if(not os.path.exists("time.txt")):
         fileManage.writeFile('time.txt', str(0))
 
-    # writes the ranks text file
-    user.assign(botID,uID)    
+    #User.assign()
 
     while True:
         response = requests.get('https://api.groupme.com/v3/groups/47728196/messages', params=request_params)
@@ -104,4 +109,3 @@ if __name__ == '__main__':
             parse_messages(valid_messages)
 
         time.sleep(1)
-        
