@@ -1,6 +1,7 @@
 import fileManage
 import botfunctions
 import webScraping
+import user
 
 import requests
 import string
@@ -29,43 +30,30 @@ def send(msg):
     return;
 
 #CHECKS ALL THE MESSAGES FOR KEYWORDS
-def parse_messages(valid_messages):
+def parse_messages(valid_messages,groupdata):
     for message in valid_messages:
         print(message['text'])
 
-        if('echo' in message['text'] ):
+        if('echo' in message['text'] and user.allowed('echo',groupdata[message['name']])):
             send(botfunctions.echo(message))
 
-        if('whois' in message['text'].lower() ):
+        if('whois' in message['text'].lower() and user.allowed('whois',groupdata[message['name']])):
             send(os.getlogin())
 
-        # if ('fojrthtry' in message['text']):
-        #     send(botfunctions.runpython(message))
         # if('exec' in message['text'][0:4]):
         #     send(botfunctions.exec(message))
 
-        if('exec' in message['text'][0:4]):
-            send(botfunctions.exec(message))
+        if('lmgtfy' in message['text'].lower() and user.allowed('lmgtfy',groupdata[message['name']])):
+            send(webScraping.letMeGoogleThatForYou(message['text'][7:]))
+
 
         # regular stop
-        if (message['text'].lower() == 'exit'):
+        if (message['text'].lower() == 'exit' and user.allowed('exit',groupdata[message['name']])):
             print('ended')
             exit()
-
-        if ("weather" in message['text'].lower()):
+        #
+        if ("weather" in message['text'].lower() and message['text'].lower() != "weather" and message['text'].lower() != "weather " and user.allowed('echo',groupdata[message['name']])):
             send(webScraping.getWeather(message['text'][8:]))
-
-        if ("image" in message['text'].lower()):
-            send(webScraping.getImage(message['text'][6:]))
-
-        # if ("weather" in message['text'].lower()):
-            #     try:#error checking, this covers if user types weathertroy instead of weather troy
-            #         send(webScraping.getWeather(message['text'][8:]))
-            #     except:
-            #         send(webScraping.getWeather(message['text'][7:]))
-            #     else:
-            #         send("City Not Found - Syntax is \n \"Weather city\" or \n \"Weather ZipCode\"" +
-            #                   "\n Ex1: Weather Troy \n Ex2: Weather 1218")
 
 #main
 if __name__ == '__main__':
@@ -77,6 +65,9 @@ if __name__ == '__main__':
     if(not os.path.exists("time.txt")):
         fileManage.writeFile('time.txt', str(0))
 
+    groupdata = user.assign(botID,uID)
+
+    
     while True:
         response = requests.get('https://api.groupme.com/v3/groups/47728196/messages', params=request_params)
 
@@ -104,6 +95,7 @@ if __name__ == '__main__':
             if(most_recent_message_time != 0):
                 fileManage.writeFile('time.txt', str(most_recent_message_time))
 
-            parse_messages(valid_messages)
+            parse_messages(valid_messages,groupdata)
 
-time.sleep(1)
+        time.sleep(1)
+        
