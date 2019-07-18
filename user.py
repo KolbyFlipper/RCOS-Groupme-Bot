@@ -1,6 +1,7 @@
 import requests
 import shlex
 import string
+import sqlite3
 
 ranks = ["user", "trusted", "moderator", "admin","owner"]
 cmds = {"user":["echo", "lmgtfy", "weather"], "trusted":["add-user","echo", "lmgtfy", "weather"], "moderator":["add-user","echo", "lmgtfy", "weather"], "admin":["add-user","promote","pycall","echo", "lmgtfy", "weather", "whois"],"owner":["add-user","promote","pycall","echo", "lmgtfy", "exit", "weather","whois"]}
@@ -44,7 +45,7 @@ def addu(info, botID, uID):
     else:
         add_param['members'][0]['user_id'] = shparam[1]
     try:
-        print(requests.post("https://api.groupme.com/v3/groups?token=2FbBv60XqZzn6kFuxQ4gL0OfxmrwRREosahZcUry/47728196/members/add", params=add_param).json())
+        print(requests.post("https://api.groupme.com/v3/groups?token={}/PLACEHOLDER/members/add".format(uID), params=add_param).json())
     except:
         print("add error placeholder")
     #else:
@@ -65,10 +66,12 @@ def assign(botID,uID):
         members = requests.get("https://api.groupme.com/v3/groups?token={}".format(uID)).json()['response'][0]['members']
         for dude in members:
             nick = dude['nickname']
-            if (dude['roles'][0] == 'admin'):
+            if ("owner" in dude['roles']):
                 role = 'owner'
+            else if ("admin" in dude["roles"]):
+                role = "admin"
             else:
-                role = dude['roles'][0]
+                role = "user"
             groupdata[nick] = User(nick, dude['user_id'], role) 
             f.write("{}:user_id={},role={}\n".format(dude['nickname'], dude['user_id'],role))
         f.close()
