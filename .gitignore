@@ -1,3 +1,5 @@
 # Dont track the pass key files
 *.txt
+# Ignore's the group's db file too
+*.db
 __pycache__
