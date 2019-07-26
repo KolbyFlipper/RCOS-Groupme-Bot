@@ -1,7 +1,6 @@
 import fileManage
 import botfunctions
 import webScraping
-
 import requests
 import string
 import time
@@ -10,7 +9,7 @@ import subprocess
 import time
 
 botName = "Thanos"
-
+localBotName = "Kolby"
 
 #GETS THE SENSITVE BOT INFO
 def botinfo():
@@ -43,9 +42,6 @@ def parse_messages(valid_messages):
         if('whois' == text):
             send(os.getlogin())
 
-        #if ('runpython' in message['text']):
-        #     send(botfunctions.runpython(message))
-
         if('exec' == text[0:4]):
             send(botfunctions.exec(message))
 
@@ -55,10 +51,11 @@ def parse_messages(valid_messages):
             exit()
 
         if ("weather" in text[0:7] and text != "weather"):
-            send(webScraping.getWeather(message['text'][8:]))
+            send(webScraping.getWeather(text[8:]))
 
-        if ("image" in text[0:5] and text != "image"):
-            send(webScraping.getImage(message['text'][6:]))
+        if ("google" in message['text'].lower()):
+            send(webScraping.letMeGoogleThatForYou(message['text']))
+            #sends entire message to lmgtfy function
 
 #main
 if __name__ == '__main__':
@@ -92,9 +89,13 @@ if __name__ == '__main__':
                 most_recent_message_time += 1
 
             for message in response_messages:
-                if(message['created_at'] > last_time and message['created_at'] < most_recent_message_time and message['name'] != botName):
-                    valid_messages.append(message)
-
+                if(message['created_at'] > last_time and message['created_at'] < most_recent_message_time):
+                    splitMsg = message['text'].split()
+                    if((splitMsg[0]).lower() == "all" or splitMsg[0] == localBotName):
+                        splitMsg.pop(0)
+                        newMsg = " ".join(splitMsg)
+                        message['text'] = newMsg
+                        valid_messages.append(message)
 
             if(last_time == 0):
                 valid_messages = []
