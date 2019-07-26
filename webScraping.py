@@ -1,17 +1,23 @@
 import requests, json
 
-def getImage(imageName):
+#takes a string in any form, a single word or a full sentence or question.
+#returns a LMGTFY link, which is a service that googles a phrase for you.
+#useful if a user is asking questions in the chat that are exceedingly easy
+#to google.
+def letMeGoogleThatForYou(question):
+    print(question)
+    url = "https://lmgtfy.com/?q="
 
-    url = "https://serpapi.com/search.json?q="
-    keyword = imageName
-    endOfUrl = "&tbm=isch&ijn=0"
+    wordArray = question.split()
+    wordArray.pop(0)
 
-    full_url = url+imageName+endOfUrl
+    for word in wordArray:
+        if (word.isalpha()):
+            url += word
+            url+= "+"
+        #site ignores the extra + concatenated on, no need to strip it at the end.
 
-    response = requests.get(full_url)
-    x = response.json()
-    return(x["suggested_searches"]["name"])
-
+    return url
 
 def getWeather(cityname):
     #credit to GeeksForGeeks.org for the basis of this function's code
@@ -22,11 +28,8 @@ def getWeather(cityname):
     # base_url variable to store url
     url = "http://api.openweathermap.org/data/2.5/weather?"
 
-    # Give city name
-    city = cityname
-
     # complete url address
-    complete_url = url + "appid=" + key + "&q=" + city
+    complete_url = url + "appid=" + key + "&q=" + cityname
 
     # get method of requests module
     # return response object
@@ -60,5 +63,4 @@ def getWeather(cityname):
                         str(weather_description))
 
     else:
-        return(" City Not Found - Syntax is \n \"Weather city\" or \n \"Weather ZipCode\"" +
-          "\n Ex1: Weather Troy \n Ex2: Weather 12180")
+        return("City doesn't exist mate")
