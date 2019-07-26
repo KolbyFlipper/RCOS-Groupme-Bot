@@ -1,21 +1,17 @@
 import requests, json
 
-#takes a string in any form, a single word or a full sentence or question.
-#returns a LMGTFY link, which is a service that googles a phrase for you.
-#useful if a user is asking questions in the chat that are exceedingly easy
-#to google.
-def letMeGoogleThatForYou(question):
+def getImage(imageName):
 
-    url = "https://lmgtfy.com/?q="
-    wordArray = question.split()
+    url = "https://serpapi.com/search.json?q="
+    keyword = imageName
+    endOfUrl = "&tbm=isch&ijn=0"
 
-    for word in wordArray:
-        if (word.isalpha()):
-            url += word
-            url+= "+"
-            #site ignores the extra + concatenated on, no need to strip it at the end.
+    full_url = url+imageName+endOfUrl
 
-    return url
+    response = requests.get(full_url)
+    x = response.json()
+    return(x["suggested_searches"]["name"])
+
 
 def getWeather(cityname):
     #credit to GeeksForGeeks.org for the basis of this function's code
@@ -64,4 +60,5 @@ def getWeather(cityname):
                         str(weather_description))
 
     else:
-        return("City dun exist mate")
+        return(" City Not Found - Syntax is \n \"Weather city\" or \n \"Weather ZipCode\"" +
+          "\n Ex1: Weather Troy \n Ex2: Weather 12180")

@@ -1,3 +1,0 @@
-# Dont track the pass key files
-*.txt
-__pycache__
