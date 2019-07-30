@@ -53,60 +53,39 @@ def addu(info, botID, uID):
         #users.append(User(add_param["nickname"], ("x")))
     return "Adding user {}".format(shparam[0])
 
-'''
-def assign(botID,uID):
-    groupdata = dict()
-    try:
-        open("ranks.txt", "r")
-        x=False
-    except:
-        open("ranks.txt", "x")
-        x=True
-    
-    if (x):
-        f = open("ranks.txt","w")
-        members = requests.get("https://api.groupme.com/v3/groups?token={}".format(uID)).json()['response'][0]['members']
-        for dude in members:
-            nick = dude['nickname']
-            if ("owner" in dude['roles']):
-                role = 'owner'
-            else if ("admin" in dude["roles"]):
-                role = "admin"
-            else:
-                role = "user"
-            groupdata[nick] = User(nick, dude['user_id'], role) 
-            f.write("{}:user_id={},role={}\n".format(dude['nickname'], dude['user_id'],role))
-        f.close()
-    else:
-        f = open("ranks.txt","r")
-        for line in f:
-            line = line.split(":")
-            line[1] = line[1].strip("\n").split(",")
-            groupdata[line[0]] = User(line[0], line[1][0][8:], line[1][1][5:])
-        f.close()
-    return groupdata
-'''
-
+# scans the data and either creates or updates the local user database
 def assign(botID, uID):
     groupdata = dict()
-    if (os.path.isfile("users.db")):
-        print("fuck")
-    else:
-        conn = sqlite3.connect("users.db")
-        curs = conn.cursor()
+    exists = os.path.isfile("users.db")
+    conn = sqlite3.connect("users.db")
+    curs = conn.cursor()
+    if not exists: # First run or users.db not existing, this creates the users table
         curs.execute('''CREATE TABLE users (nick, id, role)''')
-        members = requests.get("https://api.groupme.com/v3/groups?token={}".format(uID)).json()['response'][0]['members']
-        for dude in members:
-            nick = dude['nickname']
-            if ("owner" in dude['roles']):
-                role = 'owner'
-            elif ("admin" in dude["roles"]):
-                role = "admin"
-            else:
-                role = "user"
+    members = requests.get("https://api.groupme.com/v3/groups?token={}".format(uID)).json()['response'][0]['members']
+    for dude in members: #reads through all the group members, adds them to groupdata and edits/adds to db
+        nick = dude['nickname']
+        if ("owner" in dude['roles']):
+            role = 'owner'
+        elif ("admin" in dude["roles"]):
+            role = "admin"
+        else:
+            role = "user"
+        if not curs.execute("SELECT id FROM users WHERE nick=?", (dude["nickname"],)).fetchone(): # if first run or user has been added in between runs of the program
             groupdata[nick] = User(nick, dude['user_id'], role)
             curs.execute("INSERT INTO users VALUES ('{}','{}', '{}')".format(nick, dude['user_id'], role))
-        conn.commit()
+        else: # checks new info with old database and updates where necessary
+            curs.execute("SELECT role FROM users WHERE nick = '{}'".format(dude['nickname']))
+            db_role = curs.fetchone()[0]
+            if role == "owner" or role == "admin":
+                curs.execute("UPDATE users SET role = '{}' WHERE nick = '{}'".format(role, dude['nickname']))
+                groupdata[nick] = User(nick, dude['user_id'], role)
+            if role == "user":
+                if db_role == "admin" or db_role == "owner":
+                    curs.execute("UPDATE users SET role = 'trusted' WHERE nick = '{}'".format(dude['nickname']))
+                    groupdata[nick] = User(nick, dude['user_id'], "trusted")
+                if db_role == ("trusted" or "moderator" or "user"):
+                    groupdata[nick] = User(nick, dude['user_id'], db_role)
+    conn.commit()
     conn.close()
 
 def allowed(cmd, usr):
