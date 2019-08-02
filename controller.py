@@ -9,12 +9,13 @@ import subprocess
 import time
 
 botName = "Thanos"
-localBotName = "Kolby"
+localBotName = ""
 
 #GETS THE SENSITVE BOT INFO
 def botinfo():
     global botID
     global uID
+    global groupID
     global first_run
     first_run = True
 
@@ -22,6 +23,7 @@ def botinfo():
     lines = [line.rstrip('\n') for line in f]
     botID = lines[0]
     uID = lines[1]
+    groupID = lines[2]
 
 
 #SENDS A MESSAGE TO THE GROUP
@@ -68,7 +70,7 @@ if __name__ == '__main__':
         fileManage.writeFile('time.txt', str(0))
 
     while True:
-        response = requests.get('https://api.groupme.com/v3/groups/47728196/messages', params=request_params)
+        response = requests.get('https://api.groupme.com/v3/groups/{}/messages'.format(groupID), params=request_params)
 
         #Get the messages
         if (response.status_code == 200):
