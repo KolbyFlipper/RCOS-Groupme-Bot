@@ -16,11 +16,13 @@ botName = "Thanos"
 def botinfo():
     global botID
     global uID
+    global groupID
 
     f = open("pass.txt", "r")
     lines = [line.rstrip('\n') for line in f]
     botID = lines[0]
     uID = lines[1]
+    groupID = lines[2]
 
 
 #SENDS A MESSAGE TO THE GROUP
@@ -65,11 +67,11 @@ if __name__ == '__main__':
     if(not os.path.exists("time.txt")):
         fileManage.writeFile('time.txt', str(0))
 
-    groupdata = user.assign(botID,uID)
+    groupdata = user.assign(botID,uID,groupID)
 
     
     while True:
-        response = requests.get('https://api.groupme.com/v3/groups/47728196/messages', params=request_params)
+        response = requests.get('https://api.groupme.com/v3/groups/{}/messages'.format(groupID), params=request_params)
 
         #Get the messages
         if (response.status_code == 200):

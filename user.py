@@ -14,11 +14,13 @@ class User(object):
         self.name = name
         self.rank = rank
         
-    def promote():
-        if (self.ranks.index(self.rank) != 5):
+    def promote(sender):
+        if (ranks.index(sender.rank) <= ranks.index(self.rank)):
+            return "Users can't promote beyond their rank"
+        if (ranks.index(self.rank) != self.ranks.len()-1):
             self.rank = self.ranks.index(self.rank.lower())+1
         else:
-            return "User already max level"
+            return "User already at max level"
     
     def promote(nuRank):
         if (nuRank.lower() in self.ranks):
@@ -54,14 +56,18 @@ def addu(info, botID, uID):
     return "Adding user {}".format(shparam[0])
 
 # scans the data and either creates or updates the local user database
-def assign(botID, uID):
+def assign(botID, uID, groupID):
     groupdata = dict()
     exists = os.path.isfile("users.db")
     conn = sqlite3.connect("users.db")
     curs = conn.cursor()
     if not exists: # First run or users.db not existing, this creates the users table
         curs.execute('''CREATE TABLE users (nick, id, role)''')
-    members = requests.get("https://api.groupme.com/v3/groups?token={}".format(uID)).json()['response'][0]['members']
+    members = requests.get("https://api.groupme.com/v3/groups?token={}".format(uID)).json()['response']
+    for group in members:
+        if group['group_id'] == groupID:
+            members = group['members']
+            break
     for dude in members: #reads through all the group members, adds them to groupdata and edits/adds to db
         nick = dude['nickname']
         if ("owner" in dude['roles']):
