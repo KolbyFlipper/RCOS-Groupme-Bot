@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import requests
 import fileManage
 from controller import send
@@ -49,35 +48,6 @@ def getHelp():
     commands.append("\n 6. echo: Repeats the phrase that you have sent. \n Example: echo hello world ")
     commands.append("\n 7. whois: Will display the system name of the user running the program")
     commands.append("\n 8. exit: exits the program.")
-    
+
     return " ".join(commands)
 # def sendImg(msg):
-=======
-import requests
-import fileManage
-from controller import send
-import os
-
-
-#ECHO: says what the message text is
-def echo(msg):
-    print("CMD Call: Echo ")
-    toRepeat = msg['text'][5:]
-    return(toRepeat)
-
-
-#RUNPYTHON: takes the message text, which should be python code and runs the code
-def runpython(msg):
-    content = msg['text'][9:]#parse out the call command
-
-    if(os.path.exists("yup.py")):
-        os.remove("yup.py")
-
-    fileManage.writeFile('yup.txt',content)
-    fileManage.eExt("yup.txt", '.py')
-    os.system("python yup.py")
-    os.remove("yup.py")
-
-def exec(msg):
-    return "NOT IMPLEMENTED"
->>>>>>> master

@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-# Dont track the pass key files
-*.txt
-__pycache__
-=======
 # Dont track the pass key files
 *.txt
 __pycache__
 *.db
->>>>>>> master
