@@ -7,6 +7,7 @@ import time
 import os
 import subprocess
 import time
+import user
 
 botName = "Thanos"
 localBotName = ""
@@ -38,26 +39,35 @@ def parse_messages(valid_messages):
         print(message['text'])
         text = message['text'].lower().rstrip()
 
-        if('echo' == text[0:4]):
+        if('echo' == text[0:4] and user.allowed('echo', groupdata[message['name']])):
             send(botfunctions.echo(message))
 
-        if('whois' == text):
+        if('whois' == text and user.allowed('whois', groupdata[message['name']])):
             send(os.getlogin())
 
-        if('exec' == text[0:4]):
+        if('exec' == text[0:4] and user.allowed('exec', groupdata[message['name']])):
             send(botfunctions.exec(message))
 
         # regular stop
-        if (text == 'exit' and not first_run):
+        if (text == 'exit' and not first_run and user.allowed('exit', groupdata[message['name']])):
             print('ended')
             exit()
 
-        if ("weather" in text[0:7] and text != "weather"):
+        if ("weather" in text[0:7] and text != "weather" and user.allowed('weather', groupdata[message['name']])):
             send(webScraping.getWeather(text[8:]))
 
-        if ("google" in message['text'].lower()):
+        if ("google" in message['text'].lower() and user.allowed('google', groupdata[message['name']])):
             send(webScraping.letMeGoogleThatForYou(message['text']))
             #sends entire message to lmgtfy function
+        
+        if ("promote" in message['text'].lower() and user.allowed('promote', groupdata[message['name']])):
+            msg = message['text'].split()
+            if (msg.index("promote") <= len(msg)-2):
+                if (msg.index("promote") == len(msg)-2 and msg[len(msg)-1] in groupdata.keys()):
+                    send(groupdata[msg[len(msg)-1]].promotePlus(groupdata[message['name']]))
+                if (msg.index("promote") == len(msg)-3 and msg[len(msg)-2] in groupdata.keys()):
+                    send(groupdata[msg[len(msg)-2]].promote(groupdata[message['name']], msg[len(msg)-1]))
+                    #send(user.parsePromote(message['text'])        
 
 #main
 if __name__ == '__main__':
@@ -68,6 +78,9 @@ if __name__ == '__main__':
     #if there is no recorded last run of time make the current time the last time read
     if(not os.path.exists("time.txt")):
         fileManage.writeFile('time.txt', str(0))
+        
+    groupdata = user.assign(botID,uID, groupID)
+    print(groupdata)
 
     while True:
         response = requests.get('https://api.groupme.com/v3/groups/{}/messages'.format(groupID), params=request_params)

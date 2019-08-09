@@ -11,7 +11,7 @@ Once you've set up a folder for it and copied over the structure, you'll need to
 
 So, up next you'll need a GroupMe bot account. The tutorial can be found at this link: https://dev.groupme.com/tutorials/bots, but the quick version is: create a group or select an existing group, and then use the GroupMe form (on their site) to create a bot for that group. 
 
-After it is created, you will need to create a pass.txt in the main folder where controller.py is. The contents of pass.txt need to be exactly as follows: on the first line, the bot ID, with no additional text whatsoever. On the second line goes the userID of the user who owns/created the bot. No other text in the file is required.
+After it is created, you will need to create a pass.txt in the main folder where controller.py is. The contents of pass.txt need to be exactly as follows: on the first line, the bot ID, with no additional text whatsoever. On the second line goes the userID of the user who owns/created the bot. On the third line is the ID of the group the bot is running in. No other text in the file is required.
 
 Now the bot can be run- simply open CMD in the target directory, and type "python controller.py"- you can then use all of the commands and features of the bot. To list them, simply type "help" in the chat where the bot is located while it is running.
 
