@@ -10,6 +10,7 @@ import subprocess
 import time
 
 botName = "Thanos"
+process = ""
 
 
 #GETS THE SENSITVE BOT INFO
@@ -17,7 +18,9 @@ def botinfo():
     global botID
     global uID
     global first_run
+
     first_run = True
+
 
     f = open("pass.txt", "r")
     lines = [line.rstrip('\n') for line in f]
@@ -36,6 +39,7 @@ def parse_messages(valid_messages):
     for message in valid_messages:
         print(message['text'])
         text = message['text'].lower().rstrip()
+        global process
 
         if('echo' == text[0:4]):
             send(botfunctions.echo(message))
@@ -47,7 +51,27 @@ def parse_messages(valid_messages):
         #     send(botfunctions.runpython(message))
 
         if('exec' == text[0:4]):
-            send(botfunctions.exec(message))
+            if(process == "" or not process.poll == None):
+                process = botfunctions.exec(text[5:])
+                out, err = process.communicate()
+                send(out)
+            else:
+                send("Previous process is still running, use the input command to interact")
+
+        if('input' == text[0:5]):
+            if(process == "" or process.poll != None):
+                output = process.communicate(text[6:])
+                send(output[0])
+                send(output[1])
+
+        if('is running' == text[0:10]):
+            if(process == "" or process.poll == None):
+                send("A process is running")
+            else:
+                send("I am not curerntly running a process")
+
+        if('cwd' == text[0:3]):
+            send(os.getcwd())
 
         # regular stop
         if (text == 'exit' and not first_run):

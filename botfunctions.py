@@ -2,6 +2,7 @@ import requests
 import fileManage
 from controller import send
 import os
+import subprocess
 
 
 #ECHO: says what the message text is
@@ -24,4 +25,15 @@ def runpython(msg):
     os.remove("yup.py")
 
 def exec(msg):
-    return "NOT IMPLEMENTED"
+    args = msg.split(" ")
+
+    if(args[0]) == 'exit':
+        print("whyd he try to exit")
+
+    if(args[0] == 'cd'):
+        os.chdir(args[1])
+        p = subprocess.Popen([""], shell=True)
+        return p
+    else:
+        p = subprocess.Popen(args, shell=True)
+        return p
