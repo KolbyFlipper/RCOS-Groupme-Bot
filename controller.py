@@ -60,6 +60,13 @@ def parse_messages(valid_messages):
             send(webScraping.letMeGoogleThatForYou(message['text']))
             #sends entire message to lmgtfy function
         
+        if ('pycall' in message['text']):
+            send(botfunctions.runpython(message)
+                 
+        if('restart' in message['text']):
+            botfunctions.restart()
+            exit;
+        
         if ("promote" in message['text'].lower() and user.allowed('promote', groupdata[message['name']])):
             msg = message['text'].split()
             if (msg.index("promote") <= len(msg)-2):
