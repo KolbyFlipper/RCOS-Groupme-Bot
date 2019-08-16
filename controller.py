@@ -61,7 +61,7 @@ def parse_messages(valid_messages):
             #sends entire message to lmgtfy function
         
         if ('pycall' in message['text']):
-            send(botfunctions.runpython(message)
+            send(botfunctions.runpython(message))
                  
         if('restart' in message['text']):
             botfunctions.restart()
