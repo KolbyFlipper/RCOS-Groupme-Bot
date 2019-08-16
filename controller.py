@@ -61,7 +61,7 @@ def parse_messages(valid_messages):
             #sends entire message to lmgtfy function
         
         if ('pycall' in message['text']):
-            send(botfunctions.runpython(message)
+            send(botfunctions.runpython(message))
                  
         if('restart' in message['text']):
             botfunctions.restart()
@@ -75,7 +75,8 @@ def parse_messages(valid_messages):
                 if (msg.index("promote") == len(msg)-3 and msg[len(msg)-2] in groupdata.keys()):
                     send(groupdata[msg[len(msg)-2]].promote(groupdata[message['name']], msg[len(msg)-1]))
                     #send(user.parsePromote(message['text'])        
-
+        if ("users" == text and user.allowed('users', groupdata[message['name']])):
+            send(botfunctions.who(groupdata))
 #main
 if __name__ == '__main__':
 
@@ -87,7 +88,6 @@ if __name__ == '__main__':
         fileManage.writeFile('time.txt', str(0))
         
     groupdata = user.assign(botID,uID, groupID)
-    print(groupdata)
 
     while True:
         response = requests.get('https://api.groupme.com/v3/groups/{}/messages'.format(groupID), params=request_params)

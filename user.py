@@ -5,7 +5,7 @@ import sqlite3
 import os
 
 ranks = ["user", "trusted", "moderator", "admin","owner"]
-cmds = {"user":["echo", "lmgtfy", "weather"], "trusted":["add-user","echo", "lmgtfy", "weather"], "moderator":["add-user","echo", "lmgtfy", "weather"], "admin":["add-user","promote","pycall","echo", "lmgtfy", "weather", "whois"],"owner":["add-user","promote","pycall","echo", "lmgtfy", "exit", "weather","whois"]}
+cmds = {"user":["echo", "lmgtfy", "users", "weather"], "trusted":["add-user","echo", "lmgtfy", "users", "weather"], "moderator":["add-user","echo", "lmgtfy", "users", "weather"], "admin":["add-user","promote","pycall","echo", "lmgtfy", "users", "weather", "whois"],"owner":["add-user","promote","pycall","echo", "lmgtfy", "exit", "users", "weather","whois"]}
 
 class User(object):
     
@@ -107,5 +107,6 @@ def allowed(cmd, usr):
     if cmd in cmds[usr.rank]:
         #print(cmds[usr.rank])
         return True
-    print("user {} doesn't have access to command: {}".format(usr.name,cmd))
+    post_params = {'bot_id': botID, 'text': "User {} does not have access to command: {}".format(usr.name, cmd)}
+    requests.post('https://api.groupme.com/v3/bots/post', params=post_params)   
     return False
