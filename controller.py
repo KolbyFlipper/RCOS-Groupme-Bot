@@ -114,13 +114,8 @@ if __name__ == '__main__':
                 most_recent_message_time += 1
 
             for message in response_messages:
-                if(message['created_at'] > last_time and message['created_at'] < most_recent_message_time):
-                    splitMsg = message['text'].split()
-                    if((splitMsg[0]).lower() == "all" or splitMsg[0] == localBotName):
-                        splitMsg.pop(0)
-                        newMsg = " ".join(splitMsg)
-                        message['text'] = newMsg
-                        valid_messages.append(message)
+                if(message['created_at'] > last_time and message['created_at'] < most_recent_message_time and message["name"] != botName):
+                    valid_messages.append(message)
 
             if(last_time == 0):
                 valid_messages = []
