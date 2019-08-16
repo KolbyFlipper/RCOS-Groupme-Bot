@@ -63,4 +63,4 @@ def getWeather(cityname):
                         str(weather_description))
 
     else:
-        return("City doesn't exist mate")
+        return("City/zipcode not found! Are you sure you typed that right?")
