@@ -66,6 +66,9 @@ def parse_messages(valid_messages):
         if('restart' in message['text']):
             botfunctions.restart()
             exit;
+            
+        if ("help" in text[0:4]):
+            send(botfunctions.getHelp())
         
         if ("promote" in message['text'].lower() and user.allowed('promote', groupdata[message['name']])):
             msg = message['text'].split()
