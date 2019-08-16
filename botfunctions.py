@@ -42,8 +42,11 @@ def getHelp():
     commands.append("\n 4. runpython: This will allow you to run python code from your groupchat! Example: runpython for x in range(10): \n \t print(\"hello\")")
     commands.append("\n 5. string: a simple command to generate random strings of a given length 1-1000. Example: string 100")
     commands.append("\n 6. echo: Repeats the phrase that you have sent. \n Example: echo hello world ")
-    commands.append("\n 7. whois: Will display the system name of the user running the program")
-    commands.append("\n 8. exit: exits the program.")
+    commands.append("\n 7. promote: will either increase a user's rank by one or set it to another rank \n Example: promote Bob OR promote Bob admin")
+    commands.append("\n 8. users: displays the group members and their ranks")
+    commands.append("\n 9. whois: Will display the system name of the user running the program")
+    commands.append("\n 10. exit: exits the program.")
+    return " ".join(commands)
 
 def who(groupdata):
     retval = "Users:\n"
