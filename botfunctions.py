@@ -44,6 +44,7 @@ def getHelp():
     commands.append("\n 6. echo: Repeats the phrase that you have sent. \n Example: echo hello world ")
     commands.append("\n 7. whois: Will display the system name of the user running the program")
     commands.append("\n 8. exit: exits the program.")
+    return " ".join(commands)
 
 def who(groupdata):
     retval = "Users:\n"
