@@ -11,7 +11,18 @@ def echo(msg):
     toRepeat = msg['text'][5:]
     return(toRepeat)
 
+def randomString(msg):
+    value = int(msg['text'][7:])
+    if(value>1000):
+        return "That's too long! Maximum length is 1000"
+    if(value<1):
+        return "Obviously, you can't have a negative or zero length string. Stop it."
+    alphaBET = "abcdefghijklmnopqrstuvwxyz1234567890!?"
+    strang = []
+    for x in range(value):
+        strang.append(alphaBET[random.randint(0,37)])
 
+    return "".join(strang)
 
 #RUNPYTHON: takes the message text, which should be python code and runs the code
 def runpython(msg):
