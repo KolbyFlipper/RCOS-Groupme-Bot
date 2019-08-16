@@ -14,19 +14,27 @@ class User(object):
         self.name = name
         self.rank = rank
         
-    def promote(sender):
+    def promote(self, sender):
         if (ranks.index(sender.rank) <= ranks.index(self.rank)):
             return "Users can't promote beyond their rank"
-        if (ranks.index(self.rank) != self.ranks.len()-1):
-            self.rank = self.ranks.index(self.rank.lower())+1
-        else:
-            return "User already at max level"
+        if (ranks.index(self.rank) <= self.ranks.len()):
+            return self.promote(sender, ranks[ranks.index(self.rank)+1])
+        return "User already at max level"
     
-    def promote(nuRank):
-        if (nuRank.lower() in self.ranks):
-            self.rank = nuRank
-        else:
-            return "Invalid user level"
+    def promote(sender, nuRank):
+        if nuRank not in ranks:
+            return "Invalid user level. Valid User levels: user, trusted, moderator, admin, and owner"
+        if ranks.index(sender.rank) < ranks.index(nuRank):
+            return "Users can't promote beyond their rank"
+        if self.rank == nuRank:
+            return "{} is already {}".format(self.name, nuRank)
+        conn = sqlite3.connect()
+        curs = conn.cursor()
+        curs.execute("UPDATE users SET role = '{}' WHERE nick = '{}'".format(nuRank, self.name)) 
+        conn.commit()
+        conn.close()
+        return "{} is now {}".format(self.name, nuRank)
+        
         
 ##################################################################
 ###################  Nonmember functions  ########################

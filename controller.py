@@ -56,6 +56,16 @@ def parse_messages(valid_messages,groupdata):
         #
         if ("weather" in message['text'].lower() and message['text'].lower() != "weather" and message['text'].lower() != "weather " and user.allowed('echo',groupdata[message['name']])):
             send(webScraping.getWeather(message['text'][8:]))
+            
+        if ("promote" in message['text'].lower() and user.allowed('promote',groupdata[message['name']])):
+            msg = message['text'].split()
+            if (msg.index("promote") <= msg.len()-2):
+                if (msg.index("promote") == msg.len()-2 and msg[msg.len()-1] in groupdata.keys()):
+                    send(groupdata[msg[msg.len()-1]].promote(groupdata[message['name']]))
+                if (msg.index("promote") == msg.len()-3 and msg[msg.len()-2] in groupdata.keys()):
+                    send(groupdata[msg[msg.len()-2]].promote(groupdata[message['name']], msg[msg.len()-1]))
+            #send(user.parsePromote(message['text'])
+            
 
 #main
 if __name__ == '__main__':
