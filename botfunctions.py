@@ -34,6 +34,17 @@ def restart():
     print("restarted succefssfuklly i think")
     return "end"
 
+def getHelp():
+    commands = []
+    commands.append("1. help: Will display this comment to the user. Example: help")
+    commands.append("\n 2. google: Will generate a lightly sardonic google link. \n Example: google where is alaska  ")
+    commands.append("\n 3. weather: Will give you the weather in a zip code or city \n Example: weather 11742 or weather Detroit")
+    commands.append("\n 4. runpython: This will allow you to run python code from your groupchat! Example: runpython for x in range(10): \n \t print(\"hello\")")
+    commands.append("\n 5. string: a simple command to generate random strings of a given length 1-1000. Example: string 100")
+    commands.append("\n 6. echo: Repeats the phrase that you have sent. \n Example: echo hello world ")
+    commands.append("\n 7. whois: Will display the system name of the user running the program")
+    commands.append("\n 8. exit: exits the program.")
+
 def who(groupdata):
     retval = "Users:\n"
     whoswho = dict()
